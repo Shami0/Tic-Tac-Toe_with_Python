@@ -8,13 +8,11 @@ class TicTacToe:
         self.root.title("Tic Tac Toe")
         self.font = font.Font(family="Arial", size=20)
 
-        # Game variables
         self.board = [''] * 9
-        self.human = 'X'  # Human symbol
-        self.ai = 'O'     # AI symbol
-        self.current_player = self.human  # Human starts first
+        self.human = 'X'
+        self.ai = 'O'
+        self.current_player = self.human
 
-        # Create buttons
         self.buttons = []
         for i in range(9):
             button = tk.Button(self.root, width=6, height=3, font=self.font,
@@ -22,18 +20,15 @@ class TicTacToe:
             button.grid(row=i // 3, column=i % 3, sticky="nsew")
             self.buttons.append(button)
 
-        # Make UI responsive
         for i in range(3):
             self.root.grid_rowconfigure(i, weight=1)
             self.root.grid_columnconfigure(i, weight=1)
 
-        # Status label
         self.status = tk.Label(self.root, text=f"Player {self.current_player}'s turn",
                                font=(self.font.cget("family"), 14))
         self.status.grid(row=3, column=0, columnspan=3, sticky="nsew")
 
 
-        # Menu bar
         menubar = tk.Menu(self.root)
         self.root.config(menu=menubar)
         game_menu = tk.Menu(menubar, tearoff=0)
@@ -51,7 +46,7 @@ class TicTacToe:
             self.end_game(tie=True)
         else:
             self.current_player = self.ai
-            self.root.after(500, self.ai_move)  # AI moves after 500ms
+            self.root.after(500, self.ai_move)
 
     def ai_move(self):
         best_move = self.find_best_move()
@@ -67,27 +62,23 @@ class TicTacToe:
     def find_best_move(self):
         empty_cells = [i for i, cell in enumerate(self.board) if cell == '']
 
-        # 1. Check if AI can win
         for pos in empty_cells:
             self.board[pos] = self.ai
             if self.check_win(self.ai):
-                self.board[pos] = ''  # Reset
+                self.board[pos] = ''
                 return pos
             self.board[pos] = ''
 
-        # 2. Block Human win
         for pos in empty_cells:
             self.board[pos] = self.human
             if self.check_win(self.human):
-                self.board[pos] = ''  # Reset
+                self.board[pos] = '' 
                 return pos
             self.board[pos] = ''
 
-        # 3. Pick center if available
         if 4 in empty_cells:
             return 4
 
-        # 4. Pick a random empty spot
         return random.choice(empty_cells)
 
     def make_move(self, position, symbol):
@@ -104,7 +95,7 @@ class TicTacToe:
         for pos in win_positions:
             if all(self.board[i] == player for i in pos):
                 for i in pos:
-                    self.buttons[i].config(bg="lightgreen")  # Highlight win
+                    self.buttons[i].config(bg="lightgreen")
                 return True
         return False
 
@@ -121,7 +112,7 @@ class TicTacToe:
     def new_game(self):
         self.board = [''] * 9
         self.current_player = self.human if random.choice([True, False]) else self.ai
-        # Swap human and AI symbols if AI starts
+
         if self.current_player == self.ai:
             self.human, self.ai = self.ai, self.human
 
@@ -131,7 +122,7 @@ class TicTacToe:
         self.status.config(text=f"Player {self.current_player}'s turn")
 
         if self.current_player == self.ai:
-            self.root.after(500, self.ai_move)  # AI starts first
+            self.root.after(500, self.ai_move)
 
 if __name__ == "__main__":
     game = TicTacToe()
